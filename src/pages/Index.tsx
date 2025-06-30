@@ -5,9 +5,13 @@ import HeroSection from '@/components/HeroSection';
 import PricingSection from '@/components/PricingSection';
 import LiveClassSection from '@/components/LiveClassSection';
 import ContactSection from '@/components/ContactSection';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
   const [language, setLanguage] = useState<'th' | 'en'>('th');
+  const { user, signOut } = useAuth();
 
   const handleLanguageChange = (lang: 'th' | 'en') => {
     setLanguage(lang);
@@ -16,6 +20,31 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white">
       <Navbar language={language} onLanguageChange={handleLanguageChange} />
+      
+      {/* Auth Status Bar */}
+      <div className="fixed top-16 right-4 z-50">
+        {user ? (
+          <div className="bg-white rounded-lg shadow-lg p-3 flex items-center space-x-3">
+            <span className="text-sm text-gray-600">
+              {language === 'th' ? 'สวัสดี' : 'Hello'} {user.email}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={signOut}
+              className="text-sm"
+            >
+              {language === 'th' ? 'ออกจากระบบ' : 'Sign Out'}
+            </Button>
+          </div>
+        ) : (
+          <Link to="/auth">
+            <Button className="btn-primary">
+              {language === 'th' ? 'เข้าสู่ระบบ' : 'Sign In'}
+            </Button>
+          </Link>
+        )}
+      </div>
       
       <main className="pt-16">
         <HeroSection language={language} />
